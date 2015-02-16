@@ -201,7 +201,7 @@
         default:
           grunt.log.error("Bad pandoc format: " + target);
       }
-      command = joinLines("pandoc\n--smart\n" + output + "\n" + template + "\n--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures\n--latex-engine=xelatex\n" + variables + "\n" + filters + "\n--chapters\n--number-sections\n--table-of-contents\n--highlight-style tango\n--standalone\n--self-contained\n" + extras + "\n" + srcDir + "/meta/metadata.yaml\n" + metadata + "\n" + (meta.pages.join(" ")));
+      command = joinLines("pandoc\n--smart\n" + output + "\n" + template + "\n--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists\n--latex-engine=xelatex\n" + variables + "\n" + filters + "\n--chapters\n--number-sections\n--table-of-contents\n--highlight-style tango\n--standalone\n--self-contained\n" + extras + "\n" + srcDir + "/meta/metadata.yaml\n" + metadata + "\n" + (meta.pages.join(" ")));
       return runCommand(command, this.async());
     });
     grunt.registerTask("exercises", "Download and build exercises", function(target) {
