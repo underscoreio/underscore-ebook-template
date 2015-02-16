@@ -18,7 +18,7 @@
       options = {};
     }
     minify = (_ref = grunt.option('minify')) != null ? _ref : false;
-    libDir = (_ref1 = options.lib) != null ? _ref1 : "node_modules/underscore-ebook/lib";
+    libDir = (_ref1 = options.lib) != null ? _ref1 : "node_modules/underscore-ebook-template/lib";
     srcDir = (_ref2 = options.src) != null ? _ref2 : "src";
     distDir = (_ref3 = options.dist) != null ? _ref3 : "dist";
     grunt.loadNpmTasks("grunt-browserify");
