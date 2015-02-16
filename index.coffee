@@ -1,14 +1,18 @@
 #global module:false
 
+"use strict"
+
 path    = require 'path'
 process = require 'child_process'
 yaml    = require 'js-yaml'
 fs      = require 'fs'
 
-"use strict"
+module.exports = (grunt, options = {}) ->
+  minify  = grunt.option('minify') ? false
 
-module.exports = (grunt) ->
-  minify = grunt.option('minify') ? false
+  libDir  = options.lib  ? "node_modules/underscore-ebook/lib"
+  srcDir  = options.src  ? "src"
+  distDir = options.dist ? "dist"
 
   grunt.loadNpmTasks "grunt-browserify"
   grunt.loadNpmTasks "grunt-contrib-clean"
@@ -20,6 +24,12 @@ module.exports = (grunt) ->
 
   joinLines = (lines) ->
     lines.split(/[ \r\n]+/).join(" ")
+
+  createObject = (pairs...) ->
+    ans = {}
+    for [ key, value ] in pairs
+      ans[key] = value
+    ans
 
   runCommand = (command, done, options = {}) ->
     grunt.log.write("Running shell command: #{command}\n")
@@ -43,7 +53,7 @@ module.exports = (grunt) ->
 
     return
 
-  meta = yaml.safeLoad(fs.readFileSync('./src/meta/metadata.yaml', 'utf8'))
+  meta = yaml.safeLoad(fs.readFileSync("./#{srcDir}/meta/metadata.yaml", 'utf8'))
 
   unless typeof meta.filenameStem == "string"
     grunt.fail.fatal("'filename' in metadata must be a string")
@@ -64,25 +74,29 @@ module.exports = (grunt) ->
         options:
           paths: [
             "node_modules"
-            "lib/css"
-            "src/css"
+            "#{libDir}/css"
+            "#{srcDir}/css"
           ]
           compress: minify
           yuicompress: minify
-        files:
-          "dist/temp/main.noembed.css" : "lib/css/main.less"
+          modifyVars:
+            "lib-dir": "\"#{libDir}\""
+        files: createObject(
+          [ "#{distDir}/temp/main.noembed.css", "#{libDir}/css/main.less" ]
+        )
 
     cssUrlEmbed:
       main:
         options:
           baseDir: "."
-        files:
-          "dist/temp/main.css" : "dist/temp/main.noembed.css"
+        files: createObject(
+          [ "#{distDir}/temp/main.css", "#{distDir}/temp/main.noembed.css" ]
+        )
 
     browserify:
       main:
-        src:  "lib/js/main.coffee"
-        dest: "dist/temp/main.js"
+        src:  "#{libDir}/js/main.coffee"
+        dest: "#{distDir}/temp/main.js"
         cwd:  "."
         options:
           watch: false
@@ -99,7 +113,7 @@ module.exports = (grunt) ->
         livereload: true
       css:
         files: [
-          "lib/css/**/*"
+          "#{libDir}/css/**/*"
         ]
         tasks: [
           "less"
@@ -108,7 +122,7 @@ module.exports = (grunt) ->
         ]
       js:
         files: [
-          "lib/js/**/*"
+          "#{libDir}/js/**/*"
         ]
         tasks: [
           "browserify"
@@ -116,7 +130,7 @@ module.exports = (grunt) ->
         ]
       templates:
         files: [
-          "lib/templates/**/*"
+          "#{libDir}/templates/**/*"
         ]
         tasks: [
           "pandoc:html"
@@ -125,7 +139,7 @@ module.exports = (grunt) ->
         ]
       pages:
         files: [
-          "src/pages/**/*"
+          "#{srcDir}/pages/**/*"
         ]
         tasks: [
           "pandoc:html"
@@ -133,7 +147,7 @@ module.exports = (grunt) ->
           # "pandoc:epub"
         ]
       metadata:
-        files: [ "src/meta/**/*" ]
+        files: [ "#{srcDir}/meta/**/*" ]
         tasks: [
           "pandoc:html"
           # "pandoc:pdf"
@@ -153,57 +167,69 @@ module.exports = (grunt) ->
 
     switch target
       when "pdf"
-        output   = "--output=dist/#{meta.filenameStem}.pdf"
-        template = "--template=lib/templates/template.tex"
-        filters  = joinLines """
-                     --filter=lib/filters/pdf/callout.coffee
-                     --filter=lib/filters/pdf/columns.coffee
-                     --filter=lib/filters/pdf/solutions.coffee
-                     --filter=lib/filters/pdf/vector-images.coffee
-                   """
-        extras   = joinLines """
-                     --include-before-body=lib/templates/cover-notes.tex
-                   """
-        metadata = "src/meta/pdf.yaml"
+        output    = "--output=#{distDir}/#{meta.filenameStem}.pdf"
+        template  = "--template=#{libDir}/templates/template.tex"
+        variables = joinLines """
+                      --variable=lib-dir:#{libDir}
+                    """
+        filters   = joinLines """
+                      --filter=#{libDir}/filters/pdf/callout.coffee
+                      --filter=#{libDir}/filters/pdf/columns.coffee
+                      --filter=#{libDir}/filters/pdf/solutions.coffee
+                      --filter=#{libDir}/filters/pdf/vector-images.coffee
+                    """
+        extras    = joinLines """
+                      --include-before-body=#{libDir}/templates/cover-notes.tex
+                    """
+        metadata  = "#{srcDir}/meta/pdf.yaml"
 
       when "html"
-        output   = "--output=dist/#{meta.filenameStem}.html"
-        template = "--template=lib/templates/template.html"
-        filters  = joinLines """
-                     --filter=lib/filters/html/tables.coffee
-                     --filter=lib/filters/html/solutions.coffee
-                     --filter=lib/filters/html/vector-images.coffee
-                   """
-        extras   = joinLines """
-                     --toc-depth=2
-                     --include-before-body=lib/templates/cover-notes.html
-                   """
-        metadata = "src/meta/html.yaml"
+        output    = "--output=#{distDir}/#{meta.filenameStem}.html"
+        template  = "--template=#{libDir}/templates/template.html"
+        variables = joinLines """
+                      --variable=lib-dir:#{libDir}
+                    """
+        filters   = joinLines """
+                      --filter=#{libDir}/filters/html/tables.coffee
+                      --filter=#{libDir}/filters/html/solutions.coffee
+                      --filter=#{libDir}/filters/html/vector-images.coffee
+                    """
+        extras    = joinLines """
+                      --toc-depth=2
+                      --include-before-body=#{libDir}/templates/cover-notes.html
+                    """
+        metadata  = "#{srcDir}/meta/html.yaml"
 
       when "epub"
-        output   = "--output=dist/#{meta.filenameStem}.epub"
-        template = "--template=lib/templates/template.epub.html"
-        filters  = joinLines """
-                     --filter=lib/filters/epub/solutions.coffee
-                     --filter=lib/filters/epub/vector-images.coffee
-                   """
-        extras   = joinLines """
-                     --epub-stylesheet=dist/temp/main.css
-                     --epub-cover-image=src/covers/epub-cover.png
-                     --include-before-body=lib/templates/cover-notes.html
-                   """
-        metadata = "src/meta/epub.yaml"
+        output    = "--output=#{distDir}/#{meta.filenameStem}.epub"
+        template  = "--template=#{libDir}/templates/template.epub.html"
+        variables = joinLines """
+                      --variable=lib-dir:#{libDir}
+                    """
+        filters   = joinLines """
+                      --filter=#{libDir}/filters/epub/solutions.coffee
+                      --filter=#{libDir}/filters/epub/vector-images.coffee
+                    """
+        extras    = joinLines """
+                      --epub-stylesheet=#{distDir}/temp/main.css
+                      --epub-cover-image=#{srcDir}/covers/epub-cover.png
+                      --include-before-body=#{libDir}/templates/cover-notes.html
+                    """
+        metadata  = "#{srcDir}/meta/epub.yaml"
 
       when "json"
-        output   = "--output=dist/#{meta.filenameStem}.json"
-        template = ""
-        filters  = joinLines """
-                     --filter=lib/filters/pdf/callout.coffee
-                     --filter=lib/filters/pdf/columns.coffee
-                     --filter=lib/filters/pdf/solutions.coffee
-                   """
-        extras   = ""
-        metadata = ""
+        output    = "--output=#{distDir}/#{meta.filenameStem}.json"
+        template  = ""
+        variables = joinLines """
+                      --variable=lib-dir:#{libDir}
+                    """
+        filters   = joinLines """
+                      --filter=#{libDir}/filters/pdf/callout.coffee
+                      --filter=#{libDir}/filters/pdf/columns.coffee
+                      --filter=#{libDir}/filters/pdf/solutions.coffee
+                    """
+        extras    = ""
+        metadata  = ""
 
       else
         grunt.log.error("Bad pandoc format: #{target}")
@@ -215,6 +241,7 @@ module.exports = (grunt) ->
       #{template}
       --from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures
       --latex-engine=xelatex
+      #{variables}
       #{filters}
       --chapters
       --number-sections
@@ -223,7 +250,7 @@ module.exports = (grunt) ->
       --standalone
       --self-contained
       #{extras}
-      src/meta/metadata.yaml
+      #{srcDir}/meta/metadata.yaml
       #{metadata}
       #{meta.pages.join(" ")}
     """

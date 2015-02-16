@@ -45,7 +45,7 @@ $if(mainfont)$
 $else$
     \setmainfont[%
       Color=primary,
-      Path=lib/fonts/Lato/,
+      Path=$lib-dir$/fonts/Lato/,
       BoldItalicFont=Lato-BlackItalic,
       BoldFont=Lato-Bold,
       ItalicFont=Lato-Italic]{Lato-Regular}
@@ -56,7 +56,7 @@ $if(sansfont)$
 $else$
     \setsansfont[%
       Color=primary,
-      Path=lib/fonts/Lato/,
+      Path=$lib-dir$/fonts/Lato/,
       BoldItalicFont=Lato-BlackItalic,
       BoldFont=Lato-Bold,
       ItalicFont=Lato-Italic]{Lato-Regular}
@@ -249,13 +249,13 @@ $endfor$
 \begin{tikzpicture}[overlay, remember picture]
 \node[anchor=north west, xshift=-.2cm, yshift=.2cm]
      at (current page.north west)
-     {\includegraphics{lib/templates/images/hero-left-overlay-white.pdf}};
+     {\includegraphics{$lib-dir$/templates/images/hero-left-overlay-white.pdf}};
 \end{tikzpicture}
 
 \begin{tikzpicture}[overlay, remember picture]
 \node[anchor=south east, xshift=.2cm, yshift=-.2cm]
      at (current page.south east)
-     {\includegraphics{lib/templates/images/hero-right-overlay-white.pdf}};
+     {\includegraphics{$lib-dir$/templates/images/hero-right-overlay-white.pdf}};
 \end{tikzpicture}
 
 \begin{center}
@@ -279,7 +279,7 @@ $endif$
 
 \begin{bottompar}
 \begin{center}
-\includegraphics[width=5cm]{lib/templates/images/brand.pdf}
+\includegraphics[width=5cm]{$lib-dir$/templates/images/brand.pdf}
 
 \vspace{1cm}
 
