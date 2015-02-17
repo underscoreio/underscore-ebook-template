@@ -114,6 +114,7 @@ module.exports = (grunt, options = {}) ->
       css:
         files: [
           "#{libDir}/css/**/*"
+          "#{srcDir}/css/**/*"
         ]
         tasks: [
           "less"
@@ -123,6 +124,7 @@ module.exports = (grunt, options = {}) ->
       js:
         files: [
           "#{libDir}/js/**/*"
+          "#{srcDir}/js/**/*"
         ]
         tasks: [
           "browserify"
@@ -131,6 +133,7 @@ module.exports = (grunt, options = {}) ->
       templates:
         files: [
           "#{libDir}/templates/**/*"
+          "#{srcDir}/templates/**/*"
         ]
         tasks: [
           "pandoc:html"
@@ -147,7 +150,9 @@ module.exports = (grunt, options = {}) ->
           # "pandoc:epub"
         ]
       metadata:
-        files: [ "#{srcDir}/meta/**/*" ]
+        files: [
+          "#{srcDir}/meta/**/*"
+        ]
         tasks: [
           "pandoc:html"
           # "pandoc:pdf"
