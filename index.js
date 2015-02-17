@@ -130,15 +130,15 @@
           livereload: true
         },
         css: {
-          files: ["" + libDir + "/css/**/*"],
+          files: ["" + libDir + "/css/**/*", "" + srcDir + "/css/**/*"],
           tasks: ["less", "cssUrlEmbed", "pandoc:html"]
         },
         js: {
-          files: ["" + libDir + "/js/**/*"],
+          files: ["" + libDir + "/js/**/*", "" + srcDir + "/js/**/*"],
           tasks: ["browserify", "pandoc:html"]
         },
         templates: {
-          files: ["" + libDir + "/templates/**/*"],
+          files: ["" + libDir + "/templates/**/*", "" + srcDir + "/templates/**/*"],
           tasks: ["pandoc:html"]
         },
         pages: {
