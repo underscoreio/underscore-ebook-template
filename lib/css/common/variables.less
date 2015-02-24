@@ -1,7 +1,5 @@
 @book-color:               #777777;
 
-@headings-line-height:     @line-height-base;
-
 @border-radius-base:       0px;
 @border-radius-large:      0px;
 @border-radius-small:      0px;
@@ -18,3 +16,18 @@
 @btn-default-color:        #333;
 @btn-default-bg:           #f7f7f7;
 @btn-default-border:       #f7f7f7;
+
+// Small screen / tablet
+@container-tablet:             (720px + @grid-gutter-width);
+//** For `@screen-sm-min` and up.
+@container-sm:                 @container-tablet;
+
+// Medium screen / desktop
+@container-desktop:            (940px + @grid-gutter-width);
+//** For `@screen-md-min` and up.
+@container-md:                 @container-desktop;
+
+// Large screen / wide desktop
+@container-large-desktop:      (940px + @grid-gutter-width);
+//** For `@screen-lg-min` and up.
+@container-lg:                 @container-large-desktop;
