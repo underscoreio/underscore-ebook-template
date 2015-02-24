@@ -73,16 +73,17 @@ module.exports = (grunt, options = {}) ->
       main:
         options:
           paths: [
-            "node_modules"
-            "#{libDir}/css"
             "#{srcDir}/css"
+            "#{libDir}/css"
+            "node_modules"
           ]
           compress: minify
           yuicompress: minify
           modifyVars:
             "lib-dir": "\"#{libDir}\""
         files: createObject(
-          [ "#{distDir}/temp/main.noembed.css", "#{libDir}/css/main.less" ]
+          [ "#{distDir}/temp/html/main.noembed.css", "#{libDir}/css/html/main.less" ]
+          [ "#{distDir}/temp/epub/main.noembed.css", "#{libDir}/css/epub/main.less" ]
         )
 
     cssUrlEmbed:
@@ -90,7 +91,8 @@ module.exports = (grunt, options = {}) ->
         options:
           baseDir: "."
         files: createObject(
-          [ "#{distDir}/temp/main.css", "#{distDir}/temp/main.noembed.css" ]
+          [ "#{distDir}/temp/html/main.css", "#{distDir}/temp/html/main.noembed.css" ]
+          [ "#{distDir}/temp/epub/main.css", "#{distDir}/temp/epub/main.noembed.css" ]
         )
 
     browserify:
@@ -216,7 +218,7 @@ module.exports = (grunt, options = {}) ->
                       --filter=#{libDir}/filters/epub/vector-images.coffee
                     """
         extras    = joinLines """
-                      --epub-stylesheet=#{distDir}/temp/main.css
+                      --epub-stylesheet=#{distDir}/temp/epub/main.css
                       --epub-cover-image=#{srcDir}/covers/epub-cover.png
                       --include-before-body=#{libDir}/templates/cover-notes.html
                     """
