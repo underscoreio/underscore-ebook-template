@@ -58,8 +58,15 @@ module.exports = (grunt, options = {}) ->
   unless typeof meta.filenameStem == "string"
     grunt.fail.fatal("'filename' in metadata must be a string")
 
-  unless !meta.exercisesRepo || typeof meta.exercisesRepo == "string"
-    grunt.fail.fatal("'exercisesRepo' in metadata must be a string or null")
+  if meta.exercises
+    unless typeof meta.exercises?.repo == "string"
+      grunt.fail.fatal("'exercises.repo' in metadata must be a string")
+
+    unless typeof meta.exercises?.name == "string"
+      grunt.fail.fatal("'exercises.name' in metadata must be a string")
+  else if meta.exercisesRepo
+    grunt.fail.fatal("""Metadata key 'exercisesRepo: string' is deprecated.
+                        Replace with 'exercises: { repo: string, name: string }'""")
 
   unless Array.isArray(meta.pages)
     grunt.fail.fatal("'pages' in metadata must be an array of strings")
@@ -265,13 +272,15 @@ module.exports = (grunt, options = {}) ->
     runCommand(command, this.async())
 
   grunt.registerTask "exercises", "Download and build exercises", (target) ->
-    unless meta.exercisesRepo
-      return
+    unless meta.exercises?.repo then return
+
+    repo = meta.exercises.repo
+    name = meta.exercises.name ? "#{meta.filenameStem}-code"
 
     command = joinLines """
-      rm -rf #{meta.filenameStem}-code &&
-      git clone #{meta.exercisesRepo} &&
-      zip -r #{meta.filenameStem}-code.zip #{meta.filenameStem}-code
+      rm -rf #{name} &&
+      git clone #{repo} &&
+      zip -r #{name}.zip #{name}
     """
 
     runCommand(command, this.async(), { cwd: 'dist' })

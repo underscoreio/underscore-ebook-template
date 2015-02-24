@@ -11,7 +11,7 @@ yaml = require('js-yaml');
 fs = require('fs');
 
 module.exports = function(grunt, options) {
-  var createObject, distDir, joinLines, libDir, meta, minify, runCommand, srcDir, _ref, _ref1, _ref2, _ref3;
+  var createObject, distDir, joinLines, libDir, meta, minify, runCommand, srcDir, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
   if (options == null) {
     options = {};
   }
@@ -69,8 +69,15 @@ module.exports = function(grunt, options) {
   if (typeof meta.filenameStem !== "string") {
     grunt.fail.fatal("'filename' in metadata must be a string");
   }
-  if (!(!meta.exercisesRepo || typeof meta.exercisesRepo === "string")) {
-    grunt.fail.fatal("'exercisesRepo' in metadata must be a string or null");
+  if (meta.exercises) {
+    if (typeof ((_ref4 = meta.exercises) != null ? _ref4.repo : void 0) !== "string") {
+      grunt.fail.fatal("'exercises.repo' in metadata must be a string");
+    }
+    if (typeof ((_ref5 = meta.exercises) != null ? _ref5.name : void 0) !== "string") {
+      grunt.fail.fatal("'exercises.name' in metadata must be a string");
+    }
+  } else if (meta.exercisesRepo) {
+    grunt.fail.fatal("Metadata key 'exercisesRepo: string' is deprecated.\nReplace with 'exercises: { repo: string, name: string }'");
   }
   if (!Array.isArray(meta.pages)) {
     grunt.fail.fatal("'pages' in metadata must be an array of strings");
@@ -203,11 +210,13 @@ module.exports = function(grunt, options) {
     return runCommand(command, this.async());
   });
   grunt.registerTask("exercises", "Download and build exercises", function(target) {
-    var command;
-    if (!meta.exercisesRepo) {
+    var command, name, repo, _ref6, _ref7;
+    if (!((_ref6 = meta.exercises) != null ? _ref6.repo : void 0)) {
       return;
     }
-    command = joinLines("rm -rf " + meta.filenameStem + "-code &&\ngit clone " + meta.exercisesRepo + " &&\nzip -r " + meta.filenameStem + "-code.zip " + meta.filenameStem + "-code");
+    repo = meta.exercises.repo;
+    name = (_ref7 = meta.exercises.name) != null ? _ref7 : "" + meta.filenameStem + "-code";
+    command = joinLines("rm -rf " + name + " &&\ngit clone " + repo + " &&\nzip -r " + name + ".zip " + name);
     return runCommand(command, this.async(), {
       cwd: 'dist'
     });
