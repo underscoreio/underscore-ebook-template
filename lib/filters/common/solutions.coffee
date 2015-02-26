@@ -19,6 +19,13 @@ textOf = (body) =>
 numberedTitle = (title, number = 1) ->
   if number == 1 then title else "#{title} Part #{number}"
 
+# string string -> string
+stripPrefix = (title, prefix) ->
+  if title.indexOf(prefix) == 0
+    title.substring(prefix.length).trim()
+  else
+    title
+
 # string -> string
 labelCounter = 0
 label = (prefix, title) ->
@@ -98,8 +105,8 @@ createFilter = ({ chapterHeading, solutionHeading, linkToSolution, linkToExercis
           if chapterCounter == 1 then solutionAccum.push(chapterAccum)
 
           # Titles of the exercise and the solution:
-          exerciseTitle = headingAccum.title
-          solutionTitle = "Solution to: " + numberedTitle(headingAccum.title, headingCounter)
+          exerciseTitle = stripPrefix(headingAccum.title, "Exercise:")
+          solutionTitle = "Solution to: " + numberedTitle(exerciseTitle, headingCounter)
 
           # Anchor labels for the exercise and the solution:
           exerciseLabel = headingAccum.label

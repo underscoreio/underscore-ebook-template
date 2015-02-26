@@ -13,3 +13,4 @@ See the source code for [Creative Scala][creative-scala]
 for a complete example of use.
 
 [license]: https://httpd.apache.org/docs/2.2/license.html
+[creative-scala]: https://github.com/underscoreio/creative-scala
