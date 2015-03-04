@@ -193,6 +193,7 @@ module.exports = (grunt, options = {}) ->
                       --filter=#{libDir}/filters/pdf/vector-images.coffee
                     """
         extras    = joinLines """
+                      --toc-depth=#{meta.tocDepth ? 2}
                       --include-before-body=#{libDir}/templates/cover-notes.tex
                     """
         metadata  = "#{srcDir}/meta/pdf.yaml"
@@ -209,7 +210,7 @@ module.exports = (grunt, options = {}) ->
                       --filter=#{libDir}/filters/html/vector-images.coffee
                     """
         extras    = joinLines """
-                      --toc-depth=2
+                      --toc-depth=#{meta.tocDepth ? 2}
                       --include-before-body=#{libDir}/templates/cover-notes.html
                     """
         metadata  = "#{srcDir}/meta/html.yaml"
@@ -225,6 +226,7 @@ module.exports = (grunt, options = {}) ->
                       --filter=#{libDir}/filters/epub/vector-images.coffee
                     """
         extras    = joinLines """
+                      --toc-depth=#{meta.tocDepth ? 2}
                       --epub-stylesheet=#{distDir}/temp/epub/main.css
                       --epub-cover-image=#{srcDir}/covers/epub-cover.png
                       --include-before-body=#{libDir}/templates/cover-notes.html

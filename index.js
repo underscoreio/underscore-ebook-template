@@ -166,7 +166,7 @@ module.exports = function(grunt, options) {
   });
   grunt.renameTask("watch", "watchImpl");
   grunt.registerTask("pandoc", "Run pandoc", function(target) {
-    var command, extras, filters, metadata, output, template, variables;
+    var command, extras, filters, metadata, output, template, variables, _ref6, _ref7, _ref8;
     if (target == null) {
       target = "html";
     }
@@ -176,7 +176,7 @@ module.exports = function(grunt, options) {
         template = "--template=" + libDir + "/templates/template.tex";
         variables = joinLines("--variable=lib-dir:" + libDir);
         filters = joinLines("--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee");
-        extras = joinLines("--include-before-body=" + libDir + "/templates/cover-notes.tex");
+        extras = joinLines("--toc-depth=" + ((_ref6 = meta.tocDepth) != null ? _ref6 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.tex");
         metadata = "" + srcDir + "/meta/pdf.yaml";
         break;
       case "html":
@@ -184,7 +184,7 @@ module.exports = function(grunt, options) {
         template = "--template=" + libDir + "/templates/template.html";
         variables = joinLines("--variable=lib-dir:" + libDir);
         filters = joinLines("--filter=" + libDir + "/filters/html/tables.coffee\n--filter=" + libDir + "/filters/html/solutions.coffee\n--filter=" + libDir + "/filters/html/vector-images.coffee");
-        extras = joinLines("--toc-depth=2\n--include-before-body=" + libDir + "/templates/cover-notes.html");
+        extras = joinLines("--toc-depth=" + ((_ref7 = meta.tocDepth) != null ? _ref7 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.html");
         metadata = "" + srcDir + "/meta/html.yaml";
         break;
       case "epub":
@@ -192,7 +192,7 @@ module.exports = function(grunt, options) {
         template = "--template=" + libDir + "/templates/template.epub.html";
         variables = joinLines("--variable=lib-dir:" + libDir);
         filters = joinLines("--filter=" + libDir + "/filters/epub/solutions.coffee\n--filter=" + libDir + "/filters/epub/vector-images.coffee");
-        extras = joinLines("--epub-stylesheet=" + distDir + "/temp/epub/main.css\n--epub-cover-image=" + srcDir + "/covers/epub-cover.png\n--include-before-body=" + libDir + "/templates/cover-notes.html");
+        extras = joinLines("--toc-depth=" + ((_ref8 = meta.tocDepth) != null ? _ref8 : 2) + "\n--epub-stylesheet=" + distDir + "/temp/epub/main.css\n--epub-cover-image=" + srcDir + "/covers/epub-cover.png\n--include-before-body=" + libDir + "/templates/cover-notes.html");
         metadata = "" + srcDir + "/meta/epub.yaml";
         break;
       case "json":
