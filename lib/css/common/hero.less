@@ -41,6 +41,16 @@
     .title {
       margin: 0 0 @title-spacing;
       line-height: @title-height;
+
+      &.with-subtitle {
+        margin-top: -@title-spacing;
+      }
+    }
+
+    .subtitle {
+      display: block;
+      font-size: 66%;
+      line-height: @title-height * .6;
     }
 
     .author {
