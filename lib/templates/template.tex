@@ -265,7 +265,13 @@ $if(title)$
 {\fontsize{1.5cm}{1em} \textsf{$title$}}
 $endif$
 
-\vspace{1em}
+$if(subtitle)$
+\vspace{.25em}
+
+{\fontsize{1cm}{1em} \textsf{$subtitle$}}
+$endif$
+
+\vspace{1.25em}
 
 $for(author)$
 {\fontsize{1cm}{1em} \textsf{$author$}}
@@ -310,7 +316,7 @@ $endif$
 
 \begin{center}
 
-{\Large $title$}
+{\Large $title$$if(subtitle)$ $subtitle$$endif$}
 
 $date$
 

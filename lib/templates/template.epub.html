@@ -17,10 +17,12 @@ $endfor$
 </head>
 <body>
 $if(titlepage)$
-  <h1 class="title">$title$</h1>
+<h1 class="title">
+$title$
 $if(subtitle)$
-  <h1 class="subtitle">$subtitle$</h1>
+<span class="subtitle">$subtitle$</span>
 $endif$
+</h1>
 $for(author)$
   <h2 class="author">$author$</h2>
 $endfor$
@@ -29,7 +31,7 @@ $if(date)$
 $endif$
 
 <div style="page-break-before: always; padding-top: 3em">
-  <p class="lead text-center">$title$</p>
+  <p class="lead text-center">$title$$if(subtitle)$ $subtitle$$endif$</p>
 
   <p class="text-center">Copyright 2014 $author$.</p>
 
