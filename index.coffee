@@ -176,11 +176,29 @@ module.exports = (grunt, options = {}) ->
 
   grunt.renameTask "watch", "watchImpl"
 
-  grunt.registerTask "pandoc", "Run pandoc", (target) ->
+  grunt.registerTask "pandoc", "Run pandoc", (target, preview = false) ->
     target ?= "html"
 
     switch target
       when "pdf"
+        output    = "--output=#{distDir}/#{meta.filenameStem}.pdf"
+        template  = "--template=#{libDir}/templates/template.tex"
+        variables = joinLines """
+                      --variable=lib-dir:#{libDir}
+                    """
+        filters   = joinLines """
+                      --filter=#{libDir}/filters/pdf/callout.coffee
+                      --filter=#{libDir}/filters/pdf/columns.coffee
+                      --filter=#{libDir}/filters/pdf/solutions.coffee
+                      --filter=#{libDir}/filters/pdf/vector-images.coffee
+                    """
+        extras    = joinLines """
+                      --toc-depth=#{meta.tocDepth ? 2}
+                      --include-before-body=#{libDir}/templates/cover-notes.tex
+                    """
+        metadata  = "#{srcDir}/meta/pdf.yaml"
+
+      when "pdfpreview"
         output    = "--output=#{distDir}/#{meta.filenameStem}.pdf"
         template  = "--template=#{libDir}/templates/template.tex"
         variables = joinLines """
@@ -250,6 +268,16 @@ module.exports = (grunt, options = {}) ->
       else
         grunt.log.error("Bad pandoc format: #{target}")
 
+    if preview
+      if meta.previewPages
+        output    = output.replace(/([.][a-z]+)$/i, "-preview$1")
+        variables = "#{variables} --metadata=title:'Preview: #{meta.title}'"
+        pages     = meta.previewPages.join(" ")
+      else
+        return
+    else
+      pages     = meta.pages.join(" ")
+
     command = joinLines """
       pandoc
       --smart
@@ -268,7 +296,7 @@ module.exports = (grunt, options = {}) ->
       #{extras}
       #{srcDir}/meta/metadata.yaml
       #{metadata}
-      #{meta.pages.join(" ")}
+      #{pages}
     """
 
     runCommand(command, this.async())
@@ -315,6 +343,9 @@ module.exports = (grunt, options = {}) ->
     "pandoc:html"
     "pandoc:pdf"
     "pandoc:epub"
+    "pandoc:html:preview"
+    "pandoc:pdf:preview"
+    "pandoc:epub:preview"
   ]
 
   grunt.registerTask "watch", [
