@@ -167,8 +167,11 @@
       }
     });
     grunt.renameTask("watch", "watchImpl");
-    grunt.registerTask("pandoc", "Run pandoc", function(target) {
-      var command, extras, filters, metadata, output, template, variables, _ref6, _ref7, _ref8;
+    grunt.registerTask("pandoc", "Run pandoc", function(target, preview) {
+      var command, extras, filters, metadata, output, pages, template, variables, _ref6, _ref7, _ref8, _ref9;
+      if (preview == null) {
+        preview = false;
+      }
       if (target == null) {
         target = "html";
       }
@@ -181,12 +184,20 @@
           extras = joinLines("--toc-depth=" + ((_ref6 = meta.tocDepth) != null ? _ref6 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.tex");
           metadata = "" + srcDir + "/meta/pdf.yaml";
           break;
+        case "pdfpreview":
+          output = "--output=" + distDir + "/" + meta.filenameStem + ".pdf";
+          template = "--template=" + libDir + "/templates/template.tex";
+          variables = joinLines("--variable=lib-dir:" + libDir);
+          filters = joinLines("--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee");
+          extras = joinLines("--toc-depth=" + ((_ref7 = meta.tocDepth) != null ? _ref7 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.tex");
+          metadata = "" + srcDir + "/meta/pdf.yaml";
+          break;
         case "html":
           output = "--output=" + distDir + "/" + meta.filenameStem + ".html";
           template = "--template=" + libDir + "/templates/template.html";
           variables = joinLines("--variable=lib-dir:" + libDir);
           filters = joinLines("--filter=" + libDir + "/filters/html/tables.coffee\n--filter=" + libDir + "/filters/html/solutions.coffee\n--filter=" + libDir + "/filters/html/vector-images.coffee");
-          extras = joinLines("--toc-depth=" + ((_ref7 = meta.tocDepth) != null ? _ref7 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.html");
+          extras = joinLines("--toc-depth=" + ((_ref8 = meta.tocDepth) != null ? _ref8 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.html");
           metadata = "" + srcDir + "/meta/html.yaml";
           break;
         case "epub":
@@ -194,7 +205,7 @@
           template = "--template=" + libDir + "/templates/template.epub.html";
           variables = joinLines("--variable=lib-dir:" + libDir);
           filters = joinLines("--filter=" + libDir + "/filters/epub/solutions.coffee\n--filter=" + libDir + "/filters/epub/vector-images.coffee");
-          extras = joinLines("--toc-depth=" + ((_ref8 = meta.tocDepth) != null ? _ref8 : 2) + "\n--epub-stylesheet=" + distDir + "/temp/epub/main.css\n--epub-cover-image=" + srcDir + "/covers/epub-cover.png\n--include-before-body=" + libDir + "/templates/cover-notes.html");
+          extras = joinLines("--toc-depth=" + ((_ref9 = meta.tocDepth) != null ? _ref9 : 2) + "\n--epub-stylesheet=" + distDir + "/temp/epub/main.css\n--epub-cover-image=" + srcDir + "/covers/epub-cover.png\n--include-before-body=" + libDir + "/templates/cover-notes.html");
           metadata = "" + srcDir + "/meta/epub.yaml";
           break;
         case "json":
@@ -208,7 +219,18 @@
         default:
           grunt.log.error("Bad pandoc format: " + target);
       }
-      command = joinLines("pandoc\n--smart\n" + output + "\n" + template + "\n--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists\n--latex-engine=xelatex\n" + variables + "\n" + filters + "\n--chapters\n--number-sections\n--table-of-contents\n--highlight-style tango\n--standalone\n--self-contained\n" + extras + "\n" + srcDir + "/meta/metadata.yaml\n" + metadata + "\n" + (meta.pages.join(" ")));
+      if (preview) {
+        if (meta.previewPages) {
+          output = output.replace(/([.][a-z]+)$/i, "-preview$1");
+          variables = "" + variables + " --metadata=title:'Preview: " + meta.title + "'";
+          pages = meta.previewPages.join(" ");
+        } else {
+          return;
+        }
+      } else {
+        pages = meta.pages.join(" ");
+      }
+      command = joinLines("pandoc\n--smart\n" + output + "\n" + template + "\n--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists\n--latex-engine=xelatex\n" + variables + "\n" + filters + "\n--chapters\n--number-sections\n--table-of-contents\n--highlight-style tango\n--standalone\n--self-contained\n" + extras + "\n" + srcDir + "/meta/metadata.yaml\n" + metadata + "\n" + pages);
       return runCommand(command, this.async());
     });
     grunt.registerTask("exercises", "Download and build exercises", function(target) {
@@ -227,7 +249,7 @@
     grunt.registerTask("html", ["less", "cssUrlEmbed", "browserify", "pandoc:html"]);
     grunt.registerTask("pdf", ["pandoc:pdf"]);
     grunt.registerTask("epub", ["less", "cssUrlEmbed", "pandoc:epub"]);
-    grunt.registerTask("all", ["less", "cssUrlEmbed", "browserify", "pandoc:html", "pandoc:pdf", "pandoc:epub"]);
+    grunt.registerTask("all", ["less", "cssUrlEmbed", "browserify", "pandoc:html", "pandoc:pdf", "pandoc:epub", "pandoc:html:preview", "pandoc:pdf:preview", "pandoc:epub:preview"]);
     grunt.registerTask("watch", ["html", "connect:server", "watchImpl"]);
     return grunt.registerTask("default", ["all", "exercises"]);
   };
