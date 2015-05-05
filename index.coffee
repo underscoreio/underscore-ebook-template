@@ -71,6 +71,9 @@ module.exports = (grunt, options = {}) ->
   unless Array.isArray(meta.pages)
     grunt.fail.fatal("'pages' in metadata must be an array of strings")
 
+  unless meta.copyright
+    grunt.fail.fatal("'copyright' in metadata must be a string such as '2015' or '2014-20155'")
+
   grunt.initConfig
     clean:
       main:

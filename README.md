@@ -14,3 +14,19 @@ for a complete example of use.
 
 [license]: https://httpd.apache.org/docs/2.2/license.html
 [creative-scala]: https://github.com/underscoreio/creative-scala
+
+## Configuration Guide
+
+The following settings are supported a book's _metadata.yaml_:
+
+ Key           | Value
+-------------- | -------------
+`title`        | String
+`author`       | String, multiple authors represented as: `Name and Name`
+`date`         | String, publication identifier such as: `Early Access May 2015`
+`filenameStem` | String, filename used for HTML, EPUB, PDF output. E.g., `essential-play`
+`copyright`    | String, copyright year or range: `2015` or `2011-2015`.
+`tocDepth`     | Integer, number of levels for table of contents. E.g., `3`
+`coverColor`   | String, colour of PDF cover. E.g., `F58B40`
+`pages`        | Array, list of pages in rendering order
+`previewPages` | Array, list of pages for the preview versions in rendering order.
