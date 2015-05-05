@@ -27,5 +27,6 @@ The following settings are supported a book's _metadata.yaml_:
 `filenameStem` | String, filename used for HTML, EPUB, PDF output. E.g., `essential-play`
 `copyright`    | String, copyright year or range: `2015` or `2011-2015`.
 `tocDepth`     | Integer, number of levels for table of contents. E.g., `3`
-`pages`        | Array, list of pages in rendering order
 `coverColor`   | String, colour of PDF cover. E.g., `F58B40`
+`pages`        | Array, list of pages in rendering order
+`previewPages` | Array, list of pages for the preview versions in rendering order.
