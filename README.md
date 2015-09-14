@@ -12,6 +12,9 @@ Template for Underscore eBooks, based on [Node], [Pandoc], and [Grunt].
 See the source code for [Creative Scala][creative-scala]
 for a complete example of use.
 
+[Node]: https://nodejs.org
+[Pandoc]: http://pandoc.org/
+[Grunt]: http://gruntjs.com/
 [license]: https://httpd.apache.org/docs/2.2/license.html
 [creative-scala]: https://github.com/underscoreio/creative-scala
 
