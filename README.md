@@ -1,6 +1,6 @@
 # Underscore eBook Template
 
-Copyright 2015 Underscore Consulting LLP.
+Copyright 2016 Underscore Consulting LLP.
 
 Source code licensed under the [Apache License 2.2][license].
 
@@ -33,3 +33,45 @@ The following settings are supported a book's _metadata.yaml_:
 `coverColor`   | String, colour of PDF cover. E.g., `F58B40`
 `pages`        | Array, list of pages in rendering order
 `previewPages` | Array, list of pages for the preview versions in rendering order.
+
+## Setup
+
+This template uses a Docker container to allow setup without (much) agony.
+
+You'll need Docker Machine if you're running on Windows or OS X. Setup a VM to run Docker containers using Docker Machine (you will probably do this as part of the Docker Machine install):
+
+```bash
+docker-machine create --driver virtualbox default
+```
+
+Check you have a running machine.
+
+```bash
+docker-machine ls
+```
+
+If you don't have one running, start one and setup the environment.
+
+```bash
+docker-machine start default
+docker-machine env default
+```
+
+Build the image for the book environment
+
+```bash
+docker build -t underscore/book .
+```
+
+Now copy `docker-compose.yml` to the root of the book you're working on and run it. 
+
+```bash
+docker-compose run book bash
+```
+This will setup a shared filesystem so the material on your local filesystem can be seen by the Docker container and turned into a book, and give a `bash` prompt to interact with the Docker container.
+
+```bash
+sbt pdf
+```
+
+to generate a PDF version of the book you're working on.
