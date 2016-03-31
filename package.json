@@ -24,7 +24,7 @@
     "underscore": "1.7.0"
   },
   "dependencies": {
-    "pandoc-filter": "0.1.3",
+    "pandoc-filter": "0.1.4",
     "js-yaml": "3.2.6"
   }
 }
