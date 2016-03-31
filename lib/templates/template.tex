@@ -65,7 +65,7 @@ $endif$
 $if(monofont)$
     \setmonofont[Mapping=tex-ansi]{$monofont$}
 $else$
-    \setmonofont[Mapping=tex-ansi]{Menlo}
+    \setmonofont[Mapping=tex-ansi]{Bitstream Vera Sans}
 $endif$
 
 $if(mathfont)$
@@ -232,6 +232,11 @@ $endfor$
 % Customise default code blocks -----------------
 
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+
+% Needed for recent update to Pandoc ------------
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 % ===============================================
 % Document
