@@ -70,7 +70,7 @@ createFilter = ({ chapterHeading, solutionHeading, linkToSolution, linkToExercis
   return (type, value, format, meta) ->
     switch type
       when 'Link'
-        [ body, [ href, unused ] ] = value
+        [ attrs, body, [ href, unused ] ] = value
 
         # console.error("LINK #{JSON.stringify(href)} | #{JSON.stringify(unused)} | #{textOf(body)}")
 
