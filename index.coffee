@@ -8,11 +8,17 @@ yaml    = require 'js-yaml'
 fs      = require 'fs'
 
 module.exports = (grunt, options = {}) ->
-  minify  = grunt.option('minify') ? false
+  minify      = grunt.option('minify') ? false
 
-  libDir  = options.lib  ? "node_modules/underscore-ebook-template/lib"
-  srcDir  = options.src  ? "src"
-  distDir = options.dist ? "dist"
+  libDir      = options.dir?.lib       ? "node_modules/underscore-ebook-template/lib"
+  srcDir      = options.dir?.src       ? "src"
+  distDir     = options.dir?.dist      ? "dist"
+  metaSrcDir  = options.dir?.meta      ? "#{srcDir}/meta"
+  pageSrcDir  = options.dir?.page      ? "#{srcDir}/pages"
+  cssSrcDir   = options.dir?.css       ? "#{srcDir}/css"
+  jsSrcDir    = options.dir?.js        ? "#{srcDir}/js"
+  tplSrcDir   = options.dir?.template  ? "#{srcDir}/templates"
+  coverSrcDir = options.dir?.cover     ? "#{srcDir}/covers"
 
   grunt.loadNpmTasks "grunt-browserify"
   grunt.loadNpmTasks "grunt-contrib-clean"
@@ -53,7 +59,7 @@ module.exports = (grunt, options = {}) ->
 
     return
 
-  meta = yaml.safeLoad(fs.readFileSync("./#{srcDir}/meta/metadata.yaml", 'utf8'))
+  meta = yaml.safeLoad(fs.readFileSync("./#{metaSrcDir}/metadata.yaml", 'utf8'))
 
   unless typeof meta.filenameStem == "string"
     grunt.fail.fatal("'filename' in metadata must be a string")
@@ -72,7 +78,7 @@ module.exports = (grunt, options = {}) ->
     grunt.fail.fatal("'pages' in metadata must be an array of strings")
 
   unless meta.copyright
-    grunt.fail.fatal("'copyright' in metadata must be a string such as '2015' or '2014-20155'")
+    grunt.fail.fatal("'copyright' in metadata must be a string such as '2015' or '2014-2015'")
 
   grunt.initConfig
     clean:
@@ -83,7 +89,7 @@ module.exports = (grunt, options = {}) ->
       main:
         options:
           paths: [
-            "#{srcDir}/css"
+            cssSrcDir
             "#{libDir}/css"
             "node_modules"
           ]
@@ -126,7 +132,7 @@ module.exports = (grunt, options = {}) ->
       css:
         files: [
           "#{libDir}/css/**/*"
-          "#{srcDir}/css/**/*"
+          "#{cssSrcDir}/**/*"
         ]
         tasks: [
           "less"
@@ -136,7 +142,7 @@ module.exports = (grunt, options = {}) ->
       js:
         files: [
           "#{libDir}/js/**/*"
-          "#{srcDir}/js/**/*"
+          "#{jsSrcDir}/**/*"
         ]
         tasks: [
           "browserify"
@@ -145,7 +151,7 @@ module.exports = (grunt, options = {}) ->
       templates:
         files: [
           "#{libDir}/templates/**/*"
-          "#{srcDir}/templates/**/*"
+          "#{tplSrcDir}/**/*"
         ]
         tasks: [
           "pandoc:html"
@@ -154,7 +160,7 @@ module.exports = (grunt, options = {}) ->
         ]
       pages:
         files: [
-          "#{srcDir}/pages/**/*"
+          "#{pageSrcDir}/**/*"
         ]
         tasks: [
           "pandoc:html"
@@ -163,7 +169,7 @@ module.exports = (grunt, options = {}) ->
         ]
       metadata:
         files: [
-          "#{srcDir}/meta/**/*"
+          "#{metaSrcDir}/**/*"
         ]
         tasks: [
           "pandoc:html"
@@ -199,7 +205,7 @@ module.exports = (grunt, options = {}) ->
                       --toc-depth=#{meta.tocDepth ? 2}
                       --include-before-body=#{libDir}/templates/cover-notes.tex
                     """
-        metadata  = "#{srcDir}/meta/pdf.yaml"
+        metadata  = "#{metaSrcDir}/pdf.yaml"
 
       when "pdfpreview"
         output    = "--output=#{distDir}/#{meta.filenameStem}.pdf"
@@ -217,7 +223,7 @@ module.exports = (grunt, options = {}) ->
                       --toc-depth=#{meta.tocDepth ? 2}
                       --include-before-body=#{libDir}/templates/cover-notes.tex
                     """
-        metadata  = "#{srcDir}/meta/pdf.yaml"
+        metadata  = "#{metaSrcDir}/pdf.yaml"
 
       when "html"
         output    = "--output=#{distDir}/#{meta.filenameStem}.html"
@@ -234,7 +240,7 @@ module.exports = (grunt, options = {}) ->
                       --toc-depth=#{meta.tocDepth ? 2}
                       --include-before-body=#{libDir}/templates/cover-notes.html
                     """
-        metadata  = "#{srcDir}/meta/html.yaml"
+        metadata  = "#{metaSrcDir}/html.yaml"
 
       when "epub"
         output    = "--output=#{distDir}/#{meta.filenameStem}.epub"
@@ -249,10 +255,10 @@ module.exports = (grunt, options = {}) ->
         extras    = joinLines """
                       --toc-depth=#{meta.tocDepth ? 2}
                       --epub-stylesheet=#{distDir}/temp/epub/main.css
-                      --epub-cover-image=#{srcDir}/covers/epub-cover.png
+                      --epub-cover-image=#{coverSrcDir}/epub-cover.png
                       --include-before-body=#{libDir}/templates/cover-notes.html
                     """
-        metadata  = "#{srcDir}/meta/epub.yaml"
+        metadata  = "#{metaSrcDir}/epub.yaml"
 
       when "json"
         output    = "--output=#{distDir}/#{meta.filenameStem}.json"
@@ -275,18 +281,18 @@ module.exports = (grunt, options = {}) ->
       if meta.previewPages
         output    = output.replace(/([.][a-z]+)$/i, "-preview$1")
         variables = "#{variables} --metadata=title:'Preview: #{meta.title}'"
-        pages     = meta.previewPages.join(" ")
+        pages     = meta.previewPages.map((page) -> "#{pageSrcDir}/#{page}").join(" ")
       else
         return
     else
-      pages     = meta.pages.join(" ")
+      pages     = meta.pages.map((page) -> "#{pageSrcDir}/#{page}").join(" ")
 
     command = joinLines """
       pandoc
       --smart
       #{output}
       #{template}
-      --from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists
+      --from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists+link_attributes
       --latex-engine=xelatex
       #{variables}
       #{filters}
@@ -297,7 +303,7 @@ module.exports = (grunt, options = {}) ->
       --standalone
       --self-contained
       #{extras}
-      #{srcDir}/meta/metadata.yaml
+      #{metaSrcDir}/metadata.yaml
       #{metadata}
       #{pages}
     """
