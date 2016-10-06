@@ -15,11 +15,9 @@ areMergeable = (a, b) ->
     false
 
 mergeTwo = (a, b) ->
-  # console.error(new Error("mergeTwo " + JSON.stringify(a.t) + " " + JSON.stringify(b.t)))
   pandoc.CodeBlock(a.c[0], a.c[1] + "\n\n" + b.c[1])
 
 mergeAll = (blocks, accum = []) ->
-  # console.error(new Error("mergeAll " + JSON.stringify(blocks.map((b) -> b.t))))
   switch blocks.length
     when 0 then accum
     when 1 then accum.concat(blocks)
@@ -32,13 +30,12 @@ mergeAll = (blocks, accum = []) ->
 
 createFilter = () ->
   return (type, value, format, meta) ->
-    # console.error(new Error("filter " + JSON.stringify(type)))
     switch type
       when 'Pandoc'
         [ meta, blocks ] = value
         return { t: 'Pandoc', c: [ meta, mergeAll(blocks) ] }
       when 'BlockQuote'
-        [ blocks ] = value
+        blocks = value
         return pandoc.BlockQuote(mergeAll(blocks))
       when 'Div'
         [ attr, blocks ] = value
