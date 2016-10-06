@@ -196,6 +196,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
                       --filter=#{libDir}/filters/pdf/solutions.coffee
@@ -214,6 +215,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
                       --filter=#{libDir}/filters/pdf/solutions.coffee
@@ -232,6 +234,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      --filter=#{libDir}/filters/html/merge-code.coffee
                       --filter=#{libDir}/filters/html/tables.coffee
                       --filter=#{libDir}/filters/html/solutions.coffee
                       --filter=#{libDir}/filters/html/vector-images.coffee
@@ -249,6 +252,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      --filter=#{libDir}/filters/epub/merge-code.coffee
                       --filter=#{libDir}/filters/epub/solutions.coffee
                       --filter=#{libDir}/filters/epub/vector-images.coffee
                     """
@@ -267,6 +271,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
                       --filter=#{libDir}/filters/pdf/solutions.coffee
