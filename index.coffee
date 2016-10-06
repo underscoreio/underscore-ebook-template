@@ -201,6 +201,7 @@ module.exports = (grunt, options = {}) ->
                       --filter=#{libDir}/filters/pdf/columns.coffee
                       --filter=#{libDir}/filters/pdf/solutions.coffee
                       --filter=#{libDir}/filters/pdf/vector-images.coffee
+                      --filter=#{libDir}/filters/pdf/listings.coffee
                     """
         extras    = joinLines """
                       --toc-depth=#{meta.tocDepth ? 2}
@@ -220,6 +221,7 @@ module.exports = (grunt, options = {}) ->
                       --filter=#{libDir}/filters/pdf/columns.coffee
                       --filter=#{libDir}/filters/pdf/solutions.coffee
                       --filter=#{libDir}/filters/pdf/vector-images.coffee
+                      --filter=#{libDir}/filters/pdf/listings.coffee
                     """
         extras    = joinLines """
                       --toc-depth=#{meta.tocDepth ? 2}
@@ -275,6 +277,8 @@ module.exports = (grunt, options = {}) ->
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
                       --filter=#{libDir}/filters/pdf/solutions.coffee
+                      --filter=#{libDir}/filters/pdf/vector-images.coffee
+                      --filter=#{libDir}/filters/pdf/listings.coffee
                     """
         extras    = ""
         metadata  = ""

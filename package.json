@@ -1,6 +1,6 @@
 {
   "name": "underscore-ebook-template",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Template for Underscore eBooks",
   "main": "index.js",
   "scripts": {

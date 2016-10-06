@@ -187,7 +187,7 @@ module.exports = function(grunt, options) {
         output = "--output=" + distDir + "/" + meta.filenameStem + ".pdf";
         template = "--template=" + libDir + "/templates/template.tex";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee");
+        filters = joinLines("--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
         extras = joinLines("--toc-depth=" + ((_ref21 = meta.tocDepth) != null ? _ref21 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.tex");
         metadata = "" + metaSrcDir + "/pdf.yaml";
         break;
@@ -195,7 +195,7 @@ module.exports = function(grunt, options) {
         output = "--output=" + distDir + "/" + meta.filenameStem + ".pdf";
         template = "--template=" + libDir + "/templates/template.tex";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee");
+        filters = joinLines("--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
         extras = joinLines("--toc-depth=" + ((_ref22 = meta.tocDepth) != null ? _ref22 : 2) + "\n--include-before-body=" + libDir + "/templates/cover-notes.tex");
         metadata = "" + metaSrcDir + "/pdf.yaml";
         break;
@@ -219,7 +219,7 @@ module.exports = function(grunt, options) {
         output = "--output=" + distDir + "/" + meta.filenameStem + ".json";
         template = "";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee");
+        filters = joinLines("--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
         extras = "";
         metadata = "";
         break;

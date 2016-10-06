@@ -95,9 +95,6 @@ $if(biblio-files)$
 \bibliography{$biblio-files$}
 $endif$
 $endif$
-$if(listings)$
-\usepackage{listings}
-$endif$
 $if(lhs)$
 \lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
 $endif$
@@ -229,6 +226,66 @@ $endfor$
 % Customise default code blocks -----------------
 
 \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\},fontsize=\small}
+
+\usepackage{listings}
+
+\definecolor{codebgcolor}{HTML}{F7F7F7}
+\definecolor{commentcolor}{HTML}{8E5A13}
+\definecolor{keywordcolor}{HTML}{234A85}
+\definecolor{literalcolor}{HTML}{0100CB}
+\definecolor{stringcolor}{HTML}{519818}
+
+\makeatletter
+\lst@CCPutMacro\lst@ProcessOther {"2D}{\lst@ttfamily{-{}}{-{}}}
+\@empty\z@\@empty
+\makeatother
+
+\lstset{
+  basicstyle=\tt\footnotesize,
+  frame=single,
+  breaklines=true
+}
+
+\lstdefinestyle{scala}{
+  breakatwhitespace=false,
+  language=scala,
+  frame=none,
+  framesep=6pt,
+  framexleftmargin=6pt,
+  framexrightmargin=6pt,
+  rulesep=6pt,
+  backgroundcolor=\color{codebgcolor},
+  commentstyle=\tt\color{commentcolor},
+  extendedchars=true,
+  keepspaces=true,
+  keywordstyle=\tt\color{keywordcolor},
+  emphstyle=\tt\color{cyan},
+  rulecolor=\tt\color{black},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  stringstyle=\tt\color{stringcolor},
+  tabsize=2,
+  title=\lstname
+}
+
+\lstdefinelanguage{scala}{
+  morekeywords={abstract,case,catch,class,def,%
+    do,else,extends,false,final,finally,%
+    for,if,implicit,import,match,mixin,%
+    new,null,object,override,package,%
+    private,protected,requires,return,sealed,%
+    super,this,throw,trait,true,try,%
+    type,val,var,while,with,yield},
+  moreemph={},
+  otherkeywords={=>,<-,<\%,<:,>:,\#,@},
+  sensitive=true,
+  morecomment=[l]{//},
+  morecomment=[n]{/*}{*/},
+  morestring=[b]",
+  morestring=[b]',
+  morestring=[b]"""
+}
 
 % Needed for recent update to Pandoc ------------
 
