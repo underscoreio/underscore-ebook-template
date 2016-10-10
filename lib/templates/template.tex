@@ -250,11 +250,6 @@ $endfor$
   breakatwhitespace=false,
   language=scala,
   frame=none,
-  framesep=6pt,
-  framexleftmargin=6pt,
-  framexrightmargin=6pt,
-  rulesep=6pt,
-  backgroundcolor=\color{codebgcolor},
   commentstyle=\tt\color{commentcolor},
   extendedchars=true,
   keepspaces=true,
@@ -266,8 +261,18 @@ $endfor$
   showtabs=false,
   stringstyle=\tt\color{stringcolor},
   tabsize=2,
-  title=\lstname
+  title=\lstname,
+  aboveskip=0em,
+  belowskip=0em,
 }
+
+\surroundwithmdframed[
+  hidealllines=true,
+  backgroundcolor=codebgcolor,
+  innerleftmargin=6pt,
+  innerrightmargin=6pt,
+  innertopmargin=0,
+  innerbottommargin=2pt]{lstlisting}
 
 \lstdefinelanguage{scala}{
   morekeywords={abstract,case,catch,class,def,%
