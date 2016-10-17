@@ -188,6 +188,8 @@ module.exports = (grunt, options = {}) ->
   grunt.registerTask "pandoc", "Run pandoc", (target, preview = false) ->
     target ?= "html"
 
+    crossrefFilter = if meta.usePandocCrossref then "--filter=pandoc-crossref" else ""
+
     switch target
       when "pdf"
         output    = "--output=#{distDir}/#{meta.filenameStem}.pdf"
@@ -196,6 +198,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      #{crossrefFilter}
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
@@ -216,6 +219,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      #{crossrefFilter}
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
@@ -236,6 +240,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      #{crossrefFilter}
                       --filter=#{libDir}/filters/html/merge-code.coffee
                       --filter=#{libDir}/filters/html/tables.coffee
                       --filter=#{libDir}/filters/html/solutions.coffee
@@ -254,6 +259,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      #{crossrefFilter}
                       --filter=#{libDir}/filters/epub/merge-code.coffee
                       --filter=#{libDir}/filters/epub/solutions.coffee
                       --filter=#{libDir}/filters/epub/vector-images.coffee
@@ -273,6 +279,7 @@ module.exports = (grunt, options = {}) ->
                       --variable=lib-dir:#{libDir}
                     """
         filters   = joinLines """
+                      #{crossrefFilter}
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
