@@ -1,8 +1,9 @@
 'use strict'
 
-_      = require 'underscore'
-pandoc = require 'pandoc-filter'
-crypto = require 'crypto'
+_        = require 'underscore'
+pandoc   = require 'pandoc-filter'
+crypto   = require 'crypto'
+metadata = require './metadata'
 
 # String helpers --------------------------------
 
@@ -36,6 +37,33 @@ label = (prefix, title) ->
   labelCounter = labelCounter + 1
   prefix + crypto.createHash('md5').update(title + "-" + labelCounter).digest("hex")
 
+# Node helpers ----------------------------------
+
+solutionsHeading = (text, level) -> 
+  pandoc.Header(level, [ "solutions", [], [] ], [ pandoc.Str(text) ])
+
+chapterHeading = (heading, template, level) -> 
+  pandoc.Header(level, [ "", [], [] ], [ pandoc.Str(template.replace("$title", heading.title)) ])
+
+solutionHeading = (solution, template, level) ->
+  pandoc.Header(level, [ solution.solutionLabel, [], [] ], [ 
+    pandoc.Str(
+      template.replace(
+        "$title"
+        solution.exerciseTitle
+      ).replace(
+        "$part"
+        if solution.exerciseNumber > 1 then "Part #{solution.exerciseNumber}" else ""
+      )
+    )
+  ])
+
+linkToSolution = (solution) ->
+  pandoc.Para([ pandoc.Link(["", [], []], [ pandoc.Str("See the solution")       ], [ "#" + solution.solutionLabel, "" ]) ])
+
+linkToExercise = (solution) ->
+  pandoc.Para([ pandoc.Link(["", [], []], [ pandoc.Str("Return to the exercise") ], [ "#" + solution.exerciseLabel, "" ]) ])
+
 # Data types ------------------------------------
 
 class Heading
@@ -43,10 +71,10 @@ class Heading
     # Do nothing
 
 class Solution
-  constructor: (@exerciseLabel, @solutionLabel, @exerciseTitle, @solutionTitle, @body) ->
+  constructor: (@exerciseLabel, @solutionLabel, @exerciseTitle, @exerciseNumber, @body) ->
     # Do nothing
 
-createFilter = ({ chapterHeading, solutionHeading, linkToSolution, linkToExercise }) ->
+createFilter = ->
   # Accumulators ----------------------------------
 
   # arrayOf(or(Heading, Solution))
@@ -65,8 +93,8 @@ createFilter = ({ chapterHeading, solutionHeading, linkToSolution, linkToExercis
   #
   # The number of solutions we've passed since the last heading.
   # We record this because some exercises have multiple solutions:
-  chapterCounter = 0 # index of solution since last chapter heading
-  headingCounter = 0 # index of solution since last heading
+  chapterCounter  = 0 # index of solution since last chapter heading
+  exerciseCounter = 0 # index of solution since last heading
 
   # Tree walkin' ----------------------------------
 
@@ -75,32 +103,30 @@ createFilter = ({ chapterHeading, solutionHeading, linkToSolution, linkToExercis
       when 'Link'
         [ attrs, body, [ href, unused ] ] = value
 
-        # console.error("LINK #{JSON.stringify(href)} | #{JSON.stringify(unused)} | #{textOf(body)}")
-
+        
         return # don't rewrite the document here
       when 'Header'
         [ level, [ident, classes, kvs], body ] = value
 
-        # console.error("HEAD#{level} #{JSON.stringify(ident)} | #{textOf(body)}")
-
+        
         # Record the last title we passed so we can name and number exercises.
         # Some exercises have multiple solutions, so reset that counter too.
-        headingAccum = new Heading(ident, textOf(body))
-        headingCounter = 0
+        headingAccum    = new Heading(ident, textOf(body))
+        exerciseCounter = 0
 
         # We keep a record of the last chapter heading.
         # As soon as we see a solution in this chapter,
         # we add the chapter heading as a subheading in the solutions chapter:
         if level == 1
-          chapterAccum = headingAccum
+          chapterAccum   = headingAccum
           chapterCounter = 0
 
         return # don't rewrite the document here
       when 'Div'
         [ [ident, classes, kvs], body ] = value
         if classes?[0] == "solution"
-          chapterCounter = chapterCounter + 1
-          headingCounter = headingCounter + 1
+          chapterCounter  = chapterCounter  + 1
+          exerciseCounter = exerciseCounter + 1
 
           # If this is the first solution this chapter,
           # push the chapter heading on the list of items to
@@ -109,34 +135,45 @@ createFilter = ({ chapterHeading, solutionHeading, linkToSolution, linkToExercis
 
           # Titles of the exercise and the solution:
           exerciseTitle = stripPrefix(headingAccum.title, "Exercise:")
-          solutionTitle = "Solution to: " + numberedTitle(exerciseTitle, headingCounter)
-
+          
           # Anchor labels for the exercise and the solution:
           exerciseLabel = headingAccum.label
-          solutionLabel = label("solution:", solutionTitle)
+          solutionLabel = label("solution:", exerciseTitle)
 
-          solution = new Solution(exerciseLabel, solutionLabel, exerciseTitle, solutionTitle, body)
+          solution = new Solution(exerciseLabel, solutionLabel, exerciseTitle, exerciseCounter, body)
 
           solutionAccum.push(solution)
 
           linkToSolution(solution)
         else if classes?[0] == "solutions"
-          nodes = []
+          solutionsHeadingText    = metadata.getString(meta, ['solutions', 'headingText'])             ? undefined
+          solutionsHeadingLevel   = metadata.getInt(meta,    ['solutions', 'headingLevel'])            ? 1
+          chapterHeadingTemplate  = metadata.getString(meta, ['solutions', 'chapterHeadingTemplate'])  ? "$title"
+          chapterHeadingLevel     = metadata.getInt(meta,    ['solutions', 'chapterHeadingLevel'])     ? 2
+          solutionHeadingTemplate = metadata.getString(meta, ['solutions', 'solutionHeadingTemplate']) ? "Solution to: $title $part"
+          solutionHeadingLevel    = metadata.getInt(meta,    ['solutions', 'solutionHeadingLevel'])    ? 3
+          
+          console.error(new Error("" + solutionsHeadingText))
+          console.error(new Error("" + solutionsHeadingLevel))
+          console.error(new Error("" + chapterHeadingTemplate))
+          console.error(new Error("" + chapterHeadingLevel))
+          console.error(new Error("" + solutionHeadingTemplate))
+          console.error(new Error("" + solutionHeadingLevel))
+
+          nodes = if solutionsHeadingText? then [ solutionsHeading(solutionsHeadingText, solutionsHeadingLevel) ] else []
+
           for item in solutionAccum
             if item instanceof Heading
-              # console.error("CHAPTER #{item.title}")
-
               nodes = nodes.concat [
-                chapterHeading(item)
+                chapterHeading(item, chapterHeadingTemplate, chapterHeadingLevel)
               ]
             else if item instanceof Solution
-              # console.error("SOLUTION #{item.exerciseTitle} | #{item.solutionTitle} | #{item.exerciseLabel} | #{item.solutionLabel}")
-
               nodes = nodes.concat [
-                solutionHeading(item)
+                solutionHeading(item, solutionHeadingTemplate, solutionHeadingLevel)
                 item.body...
                 linkToExercise(item)
               ]
+
           return nodes
 
 module.exports = {

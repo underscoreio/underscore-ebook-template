@@ -193,7 +193,7 @@ module.exports = (grunt, options = {}) ->
     switch target
       when "pdf"
         output    = "--output=#{distDir}/#{meta.filenameStem}.pdf"
-        template  = "--template=#{libDir}/templates/template.tex"
+        template  = "--template=#{tplSrcDir}/template.tex"
         variables = joinLines """
                       --variable=lib-dir:#{libDir}
                     """
@@ -208,13 +208,13 @@ module.exports = (grunt, options = {}) ->
                     """
         extras    = joinLines """
                       --toc-depth=#{meta.tocDepth ? 2}
-                      --include-before-body=#{libDir}/templates/cover-notes.tex
+                      --include-before-body=#{tplSrcDir}/cover-notes.tex
                     """
         metadata  = "#{metaSrcDir}/pdf.yaml"
 
       when "pdfpreview"
         output    = "--output=#{distDir}/#{meta.filenameStem}.pdf"
-        template  = "--template=#{libDir}/templates/template.tex"
+        template  = "--template=#{tplSrcDir}/template.tex"
         variables = joinLines """
                       --variable=lib-dir:#{libDir}
                     """
@@ -229,13 +229,13 @@ module.exports = (grunt, options = {}) ->
                     """
         extras    = joinLines """
                       --toc-depth=#{meta.tocDepth ? 2}
-                      --include-before-body=#{libDir}/templates/cover-notes.tex
+                      --include-before-body=#{tplSrcDir}/cover-notes.tex
                     """
         metadata  = "#{metaSrcDir}/pdf.yaml"
 
       when "html"
         output    = "--output=#{distDir}/#{meta.filenameStem}.html"
-        template  = "--template=#{libDir}/templates/template.html"
+        template  = "--template=#{tplSrcDir}/template.html"
         variables = joinLines """
                       --variable=lib-dir:#{libDir}
                     """
@@ -248,7 +248,7 @@ module.exports = (grunt, options = {}) ->
                     """
         extras    = joinLines """
                       --toc-depth=#{meta.tocDepth ? 2}
-                      --include-before-body=#{libDir}/templates/cover-notes.html
+                      --include-before-body=#{tplSrcDir}/cover-notes.html
                     """
         metadata  = "#{metaSrcDir}/html.yaml"
 
@@ -268,7 +268,7 @@ module.exports = (grunt, options = {}) ->
                       --toc-depth=#{meta.tocDepth ? 2}
                       --epub-stylesheet=#{distDir}/temp/epub/main.css
                       --epub-cover-image=#{coverSrcDir}/epub-cover.png
-                      --include-before-body=#{libDir}/templates/cover-notes.html
+                      --include-before-body=#{tplSrcDir}/cover-notes.html
                     """
         metadata  = "#{metaSrcDir}/epub.yaml"
 
