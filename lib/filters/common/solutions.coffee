@@ -153,12 +153,12 @@ createFilter = ->
           solutionHeadingTemplate = metadata.getString(meta, ['solutions', 'solutionHeadingTemplate']) ? "Solution to: $title $part"
           solutionHeadingLevel    = metadata.getInt(meta,    ['solutions', 'solutionHeadingLevel'])    ? 3
           
-          console.error(new Error("" + solutionsHeadingText))
-          console.error(new Error("" + solutionsHeadingLevel))
-          console.error(new Error("" + chapterHeadingTemplate))
-          console.error(new Error("" + chapterHeadingLevel))
-          console.error(new Error("" + solutionHeadingTemplate))
-          console.error(new Error("" + solutionHeadingLevel))
+          # console.error(new Error("" + solutionsHeadingText))
+          # console.error(new Error("" + solutionsHeadingLevel))
+          # console.error(new Error("" + chapterHeadingTemplate))
+          # console.error(new Error("" + chapterHeadingLevel))
+          # console.error(new Error("" + solutionHeadingTemplate))
+          # console.error(new Error("" + solutionHeadingLevel))
 
           nodes = if solutionsHeadingText? then [ solutionsHeading(solutionsHeadingText, solutionsHeadingLevel) ] else []
 
