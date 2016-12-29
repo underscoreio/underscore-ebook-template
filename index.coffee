@@ -17,7 +17,7 @@ module.exports = (grunt, options = {}) ->
   pageSrcDir  = options.dir?.page      ? "#{srcDir}/pages"
   cssSrcDir   = options.dir?.css       ? "#{srcDir}/css"
   jsSrcDir    = options.dir?.js        ? "#{srcDir}/js"
-  tplSrcDir   = options.dir?.template  ? "#{srcDir}/templates"
+  tplSrcDir   = options.dir?.template  ? "#{libDir}/templates"
   coverSrcDir = options.dir?.cover     ? "#{srcDir}/covers"
 
   grunt.loadNpmTasks "grunt-browserify"
