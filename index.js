@@ -11,7 +11,7 @@ yaml = require('js-yaml');
 fs = require('fs');
 
 module.exports = function(grunt, options) {
-  var coverSrcDir, createObject, cssSrcDir, distDir, joinLines, jsSrcDir, libDir, meta, metaSrcDir, minify, pageSrcDir, runCommand, srcDir, tplSrcDir, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref18, _ref19, _ref2, _ref20, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
+  var coverSrcDir, createObject, cssSrcDir, distDir, joinLines, jsSrcDir, libDir, meta, metaSrcDir, minify, pageSrcDir, runCommand, srcDir, tplSrcDir, _ref, _ref1, _ref10, _ref11, _ref12, _ref13, _ref14, _ref15, _ref16, _ref17, _ref18, _ref19, _ref2, _ref20, _ref21, _ref22, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9;
   if (options == null) {
     options = {};
   }
@@ -23,8 +23,9 @@ module.exports = function(grunt, options) {
   pageSrcDir = (_ref9 = (_ref10 = options.dir) != null ? _ref10.page : void 0) != null ? _ref9 : "" + srcDir + "/pages";
   cssSrcDir = (_ref11 = (_ref12 = options.dir) != null ? _ref12.css : void 0) != null ? _ref11 : "" + srcDir + "/css";
   jsSrcDir = (_ref13 = (_ref14 = options.dir) != null ? _ref14.js : void 0) != null ? _ref13 : "" + srcDir + "/js";
-  coverSrcDir = (_ref15 = (_ref16 = options.dir) != null ? _ref16.cover : void 0) != null ? _ref15 : "" + srcDir + "/covers";
-  tplSrcDir = (_ref17 = (_ref18 = options.dir) != null ? _ref18.template : void 0) != null ? _ref17 : "" + libDir + "/templates";
+  tplSrcDir = (_ref15 = (_ref16 = options.dir) != null ? _ref16.template : void 0) != null ? _ref15 : "" + libDir + "/templates";
+  coverSrcDir = (_ref17 = (_ref18 = options.dir) != null ? _ref18.cover : void 0) != null ? _ref17 : "" + srcDir + "/covers";
+  tplSrcDir = (_ref19 = (_ref20 = options.dir) != null ? _ref20.template : void 0) != null ? _ref19 : "" + libDir + "/templates";
   grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks("grunt-contrib-connect");
@@ -35,11 +36,11 @@ module.exports = function(grunt, options) {
     return lines.split(/[ \r\n]+/).join(" ");
   };
   createObject = function() {
-    var ans, key, pairs, value, _i, _len, _ref19;
+    var ans, key, pairs, value, _i, _len, _ref21;
     pairs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
     ans = {};
     for (_i = 0, _len = pairs.length; _i < _len; _i++) {
-      _ref19 = pairs[_i], key = _ref19[0], value = _ref19[1];
+      _ref21 = pairs[_i], key = _ref21[0], value = _ref21[1];
       ans[key] = value;
     }
     return ans;
@@ -76,10 +77,10 @@ module.exports = function(grunt, options) {
     grunt.fail.fatal("'filename' in metadata must be a string");
   }
   if (meta.exercises) {
-    if (typeof ((_ref19 = meta.exercises) != null ? _ref19.repo : void 0) !== "string") {
+    if (typeof ((_ref21 = meta.exercises) != null ? _ref21.repo : void 0) !== "string") {
       grunt.fail.fatal("'exercises.repo' in metadata must be a string");
     }
-    if (typeof ((_ref20 = meta.exercises) != null ? _ref20.name : void 0) !== "string") {
+    if (typeof ((_ref22 = meta.exercises) != null ? _ref22.name : void 0) !== "string") {
       grunt.fail.fatal("'exercises.name' in metadata must be a string");
     }
   } else if (meta.exercisesRepo) {
@@ -175,7 +176,7 @@ module.exports = function(grunt, options) {
   });
   grunt.renameTask("watch", "watchImpl");
   grunt.registerTask("pandoc", "Run pandoc", function(target, preview) {
-    var command, crossrefFilter, extras, filters, metadata, output, pages, template, variables, _ref21, _ref22, _ref23, _ref24;
+    var command, crossrefFilter, extras, filters, metadata, output, pages, template, variables, _ref23, _ref24, _ref25, _ref26;
     if (preview == null) {
       preview = false;
     }
@@ -189,7 +190,7 @@ module.exports = function(grunt, options) {
         template = "--template=" + tplSrcDir + "/template.tex";
         variables = joinLines("--variable=lib-dir:" + libDir);
         filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
-        extras = joinLines("--toc-depth=" + ((_ref21 = meta.tocDepth) != null ? _ref21 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.tex");
+        extras = joinLines("--toc-depth=" + ((_ref23 = meta.tocDepth) != null ? _ref23 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.tex");
         metadata = "" + metaSrcDir + "/pdf.yaml";
         break;
       case "pdfpreview":
@@ -197,7 +198,7 @@ module.exports = function(grunt, options) {
         template = "--template=" + tplSrcDir + "/template.tex";
         variables = joinLines("--variable=lib-dir:" + libDir);
         filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
-        extras = joinLines("--toc-depth=" + ((_ref22 = meta.tocDepth) != null ? _ref22 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.tex");
+        extras = joinLines("--toc-depth=" + ((_ref24 = meta.tocDepth) != null ? _ref24 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.tex");
         metadata = "" + metaSrcDir + "/pdf.yaml";
         break;
       case "html":
@@ -205,7 +206,7 @@ module.exports = function(grunt, options) {
         template = "--template=" + tplSrcDir + "/template.html";
         variables = joinLines("--variable=lib-dir:" + libDir);
         filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/html/unwrap-code.coffee\n--filter=" + libDir + "/filters/html/merge-code.coffee\n--filter=" + libDir + "/filters/html/tables.coffee\n--filter=" + libDir + "/filters/html/solutions.coffee\n--filter=" + libDir + "/filters/html/vector-images.coffee");
-        extras = joinLines("--toc-depth=" + ((_ref23 = meta.tocDepth) != null ? _ref23 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.html");
+        extras = joinLines("--toc-depth=" + ((_ref25 = meta.tocDepth) != null ? _ref25 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.html");
         metadata = "" + metaSrcDir + "/html.yaml";
         break;
       case "epub":
@@ -213,7 +214,7 @@ module.exports = function(grunt, options) {
         template = "--template=" + libDir + "/templates/template.epub.html";
         variables = joinLines("--variable=lib-dir:" + libDir);
         filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/epub/unwrap-code.coffee\n--filter=" + libDir + "/filters/epub/merge-code.coffee\n--filter=" + libDir + "/filters/epub/solutions.coffee\n--filter=" + libDir + "/filters/epub/vector-images.coffee");
-        extras = joinLines("--toc-depth=" + ((_ref24 = meta.tocDepth) != null ? _ref24 : 2) + "\n--epub-stylesheet=" + distDir + "/temp/epub/main.css\n--epub-cover-image=" + coverSrcDir + "/epub-cover.png\n--include-before-body=" + tplSrcDir + "/cover-notes.html");
+        extras = joinLines("--toc-depth=" + ((_ref26 = meta.tocDepth) != null ? _ref26 : 2) + "\n--epub-stylesheet=" + distDir + "/temp/epub/main.css\n--epub-cover-image=" + coverSrcDir + "/epub-cover.png\n--include-before-body=" + tplSrcDir + "/cover-notes.html");
         metadata = "" + metaSrcDir + "/epub.yaml";
         break;
       case "json":
@@ -246,12 +247,12 @@ module.exports = function(grunt, options) {
     return runCommand(command, this.async());
   });
   grunt.registerTask("exercises", "Download and build exercises", function(target) {
-    var command, name, repo, _ref21, _ref22;
-    if (!((_ref21 = meta.exercises) != null ? _ref21.repo : void 0)) {
+    var command, name, repo, _ref23, _ref24;
+    if (!((_ref23 = meta.exercises) != null ? _ref23.repo : void 0)) {
       return;
     }
     repo = meta.exercises.repo;
-    name = (_ref22 = meta.exercises.name) != null ? _ref22 : "" + meta.filenameStem + "-code";
+    name = (_ref24 = meta.exercises.name) != null ? _ref24 : "" + meta.filenameStem + "-code";
     command = joinLines("rm -rf " + name + " &&\ngit clone " + repo + " &&\nzip -r " + name + ".zip " + name);
     return runCommand(command, this.async(), {
       cwd: 'dist'
