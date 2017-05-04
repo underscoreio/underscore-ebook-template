@@ -1,6 +1,6 @@
 {
   "name": "underscore-ebook-template",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Template for Underscore eBooks",
   "main": "index.js",
   "scripts": {
@@ -8,6 +8,9 @@
   },
   "author": "",
   "license": "",
+  "peerDependencies": {
+    "bootstrap": "3.3.1"
+  },
   "devDependencies": {
     "bootstrap": "3.3.1",
     "coffeeify": "1.0.0",

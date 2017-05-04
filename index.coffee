@@ -17,8 +17,10 @@ module.exports = (grunt, options = {}) ->
   pageSrcDir  = options.dir?.page      ? "#{srcDir}/pages"
   cssSrcDir   = options.dir?.css       ? "#{srcDir}/css"
   jsSrcDir    = options.dir?.js        ? "#{srcDir}/js"
-  tplSrcDir   = options.dir?.template  ? "#{srcDir}/templates"
+  tplSrcDir   = options.dir?.template  ? "#{libDir}/templates"
   coverSrcDir = options.dir?.cover     ? "#{srcDir}/covers"
+
+  tplSrcDir   = options.dir?.template  ? "#{libDir}/templates"
 
   grunt.loadNpmTasks "grunt-browserify"
   grunt.loadNpmTasks "grunt-contrib-clean"
@@ -199,6 +201,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      --filter=#{libDir}/filters/pdf/unwrap-code.coffee
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
@@ -220,6 +223,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      --filter=#{libDir}/filters/pdf/unwrap-code.coffee
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
@@ -241,6 +245,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      --filter=#{libDir}/filters/html/unwrap-code.coffee
                       --filter=#{libDir}/filters/html/merge-code.coffee
                       --filter=#{libDir}/filters/html/tables.coffee
                       --filter=#{libDir}/filters/html/solutions.coffee
@@ -260,6 +265,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      --filter=#{libDir}/filters/epub/unwrap-code.coffee
                       --filter=#{libDir}/filters/epub/merge-code.coffee
                       --filter=#{libDir}/filters/epub/solutions.coffee
                       --filter=#{libDir}/filters/epub/vector-images.coffee
@@ -280,6 +286,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      --filter=#{libDir}/filters/pdf/unwrap-code.coffee
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
                       --filter=#{libDir}/filters/pdf/columns.coffee
