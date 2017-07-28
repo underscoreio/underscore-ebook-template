@@ -319,7 +319,7 @@ module.exports = (grunt, options = {}) ->
       --latex-engine=xelatex
       #{variables}
       #{filters}
-      --chapters
+      --top-level-division=chapter
       --number-sections
       --table-of-contents
       --highlight-style tango
