@@ -1,6 +1,6 @@
 {
   "name": "underscore-ebook-template",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Template for Underscore eBooks",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "underscore": "1.7.0"
   },
   "dependencies": {
-    "pandoc-filter": "0.1.4",
+    "pandoc-filter": "0.1.6",
     "js-yaml": "3.2.6",
     "grunt": "0.4.5",
     "grunt-browserify": "3.3.0",
