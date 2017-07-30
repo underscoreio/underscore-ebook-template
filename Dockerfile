@@ -40,6 +40,6 @@ RUN set -ex; \
 
 RUN mkdir -p ~/bin; curl -Ls https://git.io/sbt > ~/bin/sbt && chmod 0755 ~/bin/sbt
 
-RUN echo 'PATH=~/bin:$PATH' >> ~/.bashrc
+ENV PATH=~/bin:$PATH
 
 WORKDIR /source
