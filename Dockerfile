@@ -2,7 +2,7 @@ FROM fpco/stack-build
 
 # Install pandoc
 RUN stack setup
-RUN stack install pandoc roman-numerals-0.5.1.5 syb-0.6 pandoc-crossref pandoc-include
+RUN stack install pandoc roman-numerals-0.5.1.5 syb-0.6 pandoc-crossref-0.2.5.0 pandoc-include-0.0.1
 
 #RUN stack install RUN stack install
 
