@@ -58,12 +58,12 @@ createFilter = () ->
 # so we can merge code blocks at the top level -.-
 stdioComplete = (action) ->
   stdin = require('get-stdin')
-  stdin (json) ->
+  stdin (json)  ->
     data   = JSON.parse(json)
     format = if process.argv.length > 2 then process.argv[2] else ''
-    temp   = pandoc.filter(data, action, format)
+    output   = pandoc.filter(data, action, format)
     # console.error(new Error(JSON.stringify(temp)))
-    output = [ { unMeta: temp[0].unMeta }, mergeAll(temp[1]) ]
+    # output = [ { meta: temp[0].meta }, mergeAll(temp[1]) ]
     process.stdout.write(JSON.stringify(output))
     return
 

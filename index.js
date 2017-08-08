@@ -243,7 +243,7 @@ module.exports = function(grunt, options) {
         return "" + pageSrcDir + "/" + page;
       }).join(" ");
     }
-    command = joinLines("pandoc\n--smart\n" + output + "\n" + template + "\n--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists+link_attributes\n--latex-engine=xelatex\n" + variables + "\n" + filters + "\n--chapters\n--number-sections\n--table-of-contents\n--highlight-style tango\n--standalone\n--self-contained\n" + extras + "\n" + metaSrcDir + "/metadata.yaml\n" + metadata + "\n" + pages);
+    command = joinLines("pandoc\n--smart\n" + output + "\n" + template + "\n--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists+link_attributes\n--latex-engine=xelatex\n" + variables + "\n" + filters + "\n--top-level-division=chapter\n--number-sections\n--table-of-contents\n--highlight-style tango\n--standalone\n--self-contained\n" + extras + "\n" + metaSrcDir + "/metadata.yaml\n" + metadata + "\n" + pages);
     return runCommand(command, this.async());
   });
   grunt.registerTask("exercises", "Download and build exercises", function(target) {
