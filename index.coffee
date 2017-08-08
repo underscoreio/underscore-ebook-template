@@ -191,6 +191,7 @@ module.exports = (grunt, options = {}) ->
     target ?= "html"
 
     crossrefFilter = if meta.usePandocCrossref then "--filter=pandoc-crossref" else ""
+    includeFilter  = if meta.usePandocInclude  then "--filter=pandoc-include"  else ""
 
     switch target
       when "pdf"
@@ -201,6 +202,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      #{includeFilter}
                       --filter=#{libDir}/filters/pdf/unwrap-code.coffee
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
@@ -223,6 +225,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      #{includeFilter}
                       --filter=#{libDir}/filters/pdf/unwrap-code.coffee
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee
@@ -245,6 +248,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      #{includeFilter}
                       --filter=#{libDir}/filters/html/unwrap-code.coffee
                       --filter=#{libDir}/filters/html/merge-code.coffee
                       --filter=#{libDir}/filters/html/tables.coffee
@@ -265,6 +269,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      #{includeFilter}
                       --filter=#{libDir}/filters/epub/unwrap-code.coffee
                       --filter=#{libDir}/filters/epub/merge-code.coffee
                       --filter=#{libDir}/filters/epub/solutions.coffee
@@ -286,6 +291,7 @@ module.exports = (grunt, options = {}) ->
                     """
         filters   = joinLines """
                       #{crossrefFilter}
+                      #{includeFilter}
                       --filter=#{libDir}/filters/pdf/unwrap-code.coffee
                       --filter=#{libDir}/filters/pdf/merge-code.coffee
                       --filter=#{libDir}/filters/pdf/callout.coffee

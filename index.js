@@ -176,7 +176,7 @@ module.exports = function(grunt, options) {
   });
   grunt.renameTask("watch", "watchImpl");
   grunt.registerTask("pandoc", "Run pandoc", function(target, preview) {
-    var command, crossrefFilter, extras, filters, metadata, output, pages, template, variables, _ref23, _ref24, _ref25, _ref26;
+    var command, crossrefFilter, extras, filters, includeFilter, metadata, output, pages, template, variables, _ref23, _ref24, _ref25, _ref26;
     if (preview == null) {
       preview = false;
     }
@@ -184,12 +184,13 @@ module.exports = function(grunt, options) {
       target = "html";
     }
     crossrefFilter = meta.usePandocCrossref ? "--filter=pandoc-crossref" : "";
+    includeFilter = meta.usePandocInclude ? "--filter=pandoc-include" : "";
     switch (target) {
       case "pdf":
         output = "--output=" + distDir + "/" + meta.filenameStem + ".pdf";
         template = "--template=" + tplSrcDir + "/template.tex";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
+        filters = joinLines("" + crossrefFilter + "\n" + includeFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
         extras = joinLines("--toc-depth=" + ((_ref23 = meta.tocDepth) != null ? _ref23 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.tex");
         metadata = "" + metaSrcDir + "/pdf.yaml";
         break;
@@ -197,7 +198,7 @@ module.exports = function(grunt, options) {
         output = "--output=" + distDir + "/" + meta.filenameStem + ".pdf";
         template = "--template=" + tplSrcDir + "/template.tex";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
+        filters = joinLines("" + crossrefFilter + "\n" + includeFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
         extras = joinLines("--toc-depth=" + ((_ref24 = meta.tocDepth) != null ? _ref24 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.tex");
         metadata = "" + metaSrcDir + "/pdf.yaml";
         break;
@@ -205,7 +206,7 @@ module.exports = function(grunt, options) {
         output = "--output=" + distDir + "/" + meta.filenameStem + ".html";
         template = "--template=" + tplSrcDir + "/template.html";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/html/unwrap-code.coffee\n--filter=" + libDir + "/filters/html/merge-code.coffee\n--filter=" + libDir + "/filters/html/tables.coffee\n--filter=" + libDir + "/filters/html/solutions.coffee\n--filter=" + libDir + "/filters/html/vector-images.coffee");
+        filters = joinLines("" + crossrefFilter + "\n" + includeFilter + "\n--filter=" + libDir + "/filters/html/unwrap-code.coffee\n--filter=" + libDir + "/filters/html/merge-code.coffee\n--filter=" + libDir + "/filters/html/tables.coffee\n--filter=" + libDir + "/filters/html/solutions.coffee\n--filter=" + libDir + "/filters/html/vector-images.coffee");
         extras = joinLines("--toc-depth=" + ((_ref25 = meta.tocDepth) != null ? _ref25 : 2) + "\n--include-before-body=" + tplSrcDir + "/cover-notes.html");
         metadata = "" + metaSrcDir + "/html.yaml";
         break;
@@ -213,7 +214,7 @@ module.exports = function(grunt, options) {
         output = "--output=" + distDir + "/" + meta.filenameStem + ".epub";
         template = "--template=" + libDir + "/templates/template.epub.html";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/epub/unwrap-code.coffee\n--filter=" + libDir + "/filters/epub/merge-code.coffee\n--filter=" + libDir + "/filters/epub/solutions.coffee\n--filter=" + libDir + "/filters/epub/vector-images.coffee");
+        filters = joinLines("" + crossrefFilter + "\n" + includeFilter + "\n--filter=" + libDir + "/filters/epub/unwrap-code.coffee\n--filter=" + libDir + "/filters/epub/merge-code.coffee\n--filter=" + libDir + "/filters/epub/solutions.coffee\n--filter=" + libDir + "/filters/epub/vector-images.coffee");
         extras = joinLines("--toc-depth=" + ((_ref26 = meta.tocDepth) != null ? _ref26 : 2) + "\n--epub-stylesheet=" + distDir + "/temp/epub/main.css\n--epub-cover-image=" + coverSrcDir + "/epub-cover.png\n--include-before-body=" + tplSrcDir + "/cover-notes.html");
         metadata = "" + metaSrcDir + "/epub.yaml";
         break;
@@ -221,7 +222,7 @@ module.exports = function(grunt, options) {
         output = "--output=" + distDir + "/" + meta.filenameStem + ".json";
         template = "";
         variables = joinLines("--variable=lib-dir:" + libDir);
-        filters = joinLines("" + crossrefFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
+        filters = joinLines("" + crossrefFilter + "\n" + includeFilter + "\n--filter=" + libDir + "/filters/pdf/unwrap-code.coffee\n--filter=" + libDir + "/filters/pdf/merge-code.coffee\n--filter=" + libDir + "/filters/pdf/callout.coffee\n--filter=" + libDir + "/filters/pdf/columns.coffee\n--filter=" + libDir + "/filters/pdf/solutions.coffee\n--filter=" + libDir + "/filters/pdf/vector-images.coffee\n--filter=" + libDir + "/filters/pdf/listings.coffee");
         extras = "";
         metadata = "";
         break;
