@@ -13,7 +13,6 @@ listingBeginRegex = /^\\begin\{lstlisting\}\[style=([^\]]+)\]/
 listingEndRegex   = /\\end\{lstlisting\}$/
 
 areMergeable = (a, b) ->
-  console.error(a.t, b.t)
   # Merge CodeBlock-style blocks:
   if a.t == 'CodeBlock' && b.t == 'CodeBlock'
     aLang = a.c[0][1][0]?
