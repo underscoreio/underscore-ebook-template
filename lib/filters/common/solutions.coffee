@@ -39,14 +39,14 @@ label = (prefix, title) ->
 
 # Node helpers ----------------------------------
 
-solutionsHeading = (text, level) -> 
+solutionsHeading = (text, level) ->
   pandoc.Header(level, [ "solutions", [], [] ], [ pandoc.Str(text) ])
 
-chapterHeading = (heading, template, level) -> 
+chapterHeading = (heading, template, level) ->
   pandoc.Header(level, [ "", [], [] ], [ pandoc.Str(template.replace("$title", heading.title)) ])
 
 solutionHeading = (solution, template, level) ->
-  pandoc.Header(level, [ solution.solutionLabel, [], [] ], [ 
+  pandoc.Header(level, [ solution.solutionLabel, [], [] ], [
     pandoc.Str(
       template.replace(
         "$title"
@@ -99,16 +99,19 @@ createFilter = ->
   # Tree walkin' ----------------------------------
 
   return (type, value, format, meta) ->
+    # Hacity hack. Don't generate links in print books:
+    createLinks = !meta.blackandwhiteprintable
+
     switch type
       when 'Link'
         [ attrs, body, [ href, unused ] ] = value
 
-        
+
         return # don't rewrite the document here
       when 'Header'
         [ level, [ident, classes, kvs], body ] = value
 
-        
+
         # Record the last title we passed so we can name and number exercises.
         # Some exercises have multiple solutions, so reset that counter too.
         headingAccum    = new Heading(ident, textOf(body))
@@ -135,7 +138,7 @@ createFilter = ->
 
           # Titles of the exercise and the solution:
           exerciseTitle = stripPrefix(headingAccum.title, "Exercise:")
-          
+
           # Anchor labels for the exercise and the solution:
           exerciseLabel = headingAccum.label
           solutionLabel = label("solution:", exerciseTitle)
@@ -144,7 +147,7 @@ createFilter = ->
 
           solutionAccum.push(solution)
 
-          linkToSolution(solution)
+          if createLinks then [ linkToSolution(solution) ] else []
         else if classes?[0] == "solutions"
           solutionsHeadingText    = metadata.getString(meta, ['solutions', 'headingText'])             ? undefined
           solutionsHeadingLevel   = metadata.getInt(meta,    ['solutions', 'headingLevel'])            ? 1
@@ -152,7 +155,7 @@ createFilter = ->
           chapterHeadingLevel     = metadata.getInt(meta,    ['solutions', 'chapterHeadingLevel'])     ? 2
           solutionHeadingTemplate = metadata.getString(meta, ['solutions', 'solutionHeadingTemplate']) ? "Solution to: $title $part"
           solutionHeadingLevel    = metadata.getInt(meta,    ['solutions', 'solutionHeadingLevel'])    ? 3
-          
+
           # console.error(new Error("" + solutionsHeadingText))
           # console.error(new Error("" + solutionsHeadingLevel))
           # console.error(new Error("" + chapterHeadingTemplate))
@@ -168,10 +171,12 @@ createFilter = ->
                 chapterHeading(item, chapterHeadingTemplate, chapterHeadingLevel)
               ]
             else if item instanceof Solution
+              link = if createLinks then [ linkToExercise(item) ] else []
+
               nodes = nodes.concat [
                 solutionHeading(item, solutionHeadingTemplate, solutionHeadingLevel)
                 item.body...
-                linkToExercise(item)
+                link...
               ]
 
           return nodes
